@@ -2,17 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Resumen de Notificaciones</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css" />
     
     <style>
         :root {
@@ -25,30 +23,9 @@
 
         body {
             background-color: #f3f3f3;
-            font-family: "Quicksand", sans-serif;
+            font-family: "Quicksand", serif;
         }
 
-        .btn-outline-azul {
-            --bs-btn-color: #092D39;
-            --bs-btn-border-color: #092D39;
-            --bs-btn-hover-color: #fff;
-            --bs-btn-hover-bg: #092D39;
-            --bs-btn-hover-border-color: #092D39;
-            --bs-btn-focus-shadow-rgb: 108, 117, 125;
-            --bs-btn-active-color: #fff;
-            --bs-btn-active-bg: #092D39;
-            --bs-btn-active-border-color: #092D39;
-            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-            --bs-btn-disabled-color: #092D39;
-            --bs-btn-disabled-bg: transparent;
-            --bs-btn-disabled-border-color: #092D39;
-            --bs-gradient: none;
-        }
-
-        .navbar-custom #userDropdown:hover {
-            color: white !important;
-        }
-       
         .shadow {
             box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2) !important;
         }
@@ -56,11 +33,9 @@
         .border-15 {
             border-radius: 15px !important;
         }
-
         .border-1 {
             border-radius: 0.375rem !important;
         }
-
         .swiperCarrusel {
             padding: 0 0 2rem 0 !important;
         }
@@ -118,8 +93,7 @@
             font-size: 16px;
         }
 
-        .swiperCarrusel .swiper-button-prev, 
-        .swiperCarrusel .swiper-button-next {
+        .swiperCarrusel .swiper-button-prev, .swiper-button-next {
             color: #003b6a;
             font-size: 50px;
         }
@@ -184,6 +158,19 @@
             border-radius: 7px;
         }
 
+        @media (max-width: 576px) {
+            .pagination {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .page-item {
+                flex: 1;
+                min-width: 40px;
+                text-align: center;
+            }
+        }
+
         .imagen-Lista {
             aspect-ratio: 1 / 1;
             object-fit: cover;
@@ -199,6 +186,11 @@
         .navbar-custom .nav-link,
         .navbar-custom .dropdown-toggle {
             color: var(--blueInstitucional) !important;
+        }
+
+        .navbar-custom .nav-link:hover,
+        .navbar-custom .dropdown-toggle:hover {
+            color: #0072cd !important;
         }
 
         .navbar-custom .dropdown-menu {
@@ -329,23 +321,43 @@
             animation: fade-in 0.75s 0.6s linear forwards;
         }
 
+        .hero__cnt svg {
+            height: 12vw;
+        }
+
+        .hero__cnt svg path {
+            fill: #FFF;
+        }
+
         .hero__cnt h1 {
             margin-top: 5rem;
         }
 
         @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes scaling-hero-anim {
-            from { transform: scale(1.25); }
-            to { transform: scale(1.1); }
+            from {
+                transform: scale(1.25);
+            }
+            to {
+                transform: scale(1.1);
+            }
         }
 
         @keyframes clip-hero-anim {
-            from { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%); }
-            to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+            from {
+                clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
+            }
+            to {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            }
         }
 
         .hero-nav {
@@ -409,6 +421,26 @@
             background-blend-mode: screen;
         }
 
+        .page-content {}
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes clip-hero-anim {
+            from {
+                clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
+            }
+            to {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            }
+        }
+
         .border-Hero-Bottom {
             border-bottom: var(--border-width) var(--border-style) var(--border-color) !important;
         }
@@ -464,6 +496,14 @@
             font-weight: bold;
             text-align: center;
             z-index: 1;
+        }
+
+        .modal-header-custom .btn-close {
+            color: rgba(255, 0, 0, 0.7);
+        }
+
+        .custom-close-btn {
+            filter: drop-shadow(0 0 2px red);
         }
 
         .btn-filter {
@@ -547,7 +587,7 @@
         }
 
         .custom-rentasDirectas {
-            font-family: "Quicksand", sans-serif;
+            font-family: "Quicksand", serif;
             font-weight: 700;
         }
 
@@ -557,7 +597,7 @@
             font-family: inherit;
             font-weight: 500;
             line-height: 1.2;
-            font-family: "Quicksand", sans-serif;
+            font-family: "Quicksand", serif;
             font-style: italic;
             text-transform: none;
         }
@@ -570,11 +610,30 @@
             position: absolute;
             height: 15rem;
         }
-
         .logo_navbar {
             width: 8rem;
         }
 
+        @media (max-width: 768px) {
+            .hero-nav__button {
+                font-size: 13px;
+                margin-top: 30rem;
+            }
+            .hero-nav__button a {
+                font-size: 1rem;
+            }
+
+            .custom-img-hero {
+                height: 14rem;
+                margin-bottom: 18rem;
+            }
+            
+            .hero__cnt h1 {
+                margin-bottom: 0;
+            }
+        }
+
+      
         .container-hover {
             transition: all 0.1s ease-in-out;
             cursor: pointer;
@@ -635,95 +694,183 @@
         .grabbing {
             cursor: grabbing !important;
         }
+    </style>
+    
+    <style>
+      .p-splide__slide {
+        position: relative;
+        border-radius: 0.375rem;
+       /* border: 2px solid var(--grayInstitucional);
+        background: var(--grayInstitucional);*/
+        overflow: hidden;
+        line-height: 1.5;
+        transition: border-color 0.15s cubic-bezier(0.54, 0.01, 0.1, 1), background-color 0.15s cubic-bezier(0.54, 0.01, 0.1, 1);
+      }
 
-        .separator {
-            border-right: 1px solid #ddd;
-            margin: 0 10px;
-            height: 24px;
-            align-self: center;
-        }
+ 
 
-        .p-splide__slide {
-            position: relative;
-            border-radius: 0.375rem;
-            overflow: hidden;
-            line-height: 1.5;
-            transition: border-color 0.15s cubic-bezier(0.54, 0.01, 0.1, 1), background-color 0.15s cubic-bezier(0.54, 0.01, 0.1, 1);
-        }
+      .splide__slide.is-active .p-splide__slide {
+        border-radius: 0.375rem;
+        border-color: var(--blueInstitucional);
+      }
 
-        .splide__slide.is-active .p-splide__slide {
-            border-radius: 0.375rem;
-            border-color: var(--blueInstitucional);
-        }
+   
 
-        .splide__pagination__page {
-            padding: 0;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #93a313;
-            margin: 0.4em;
-            cursor: pointer;
-            display: block;
-        }
+      .splide__pagination__page {
+        padding: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #93a313;
+        margin: 0.4em;
+        cursor: pointer;
+        display: block;
+      }
 
-        .splide__slide img {
+      .splide__slide img {
             width: 100%;
             height: auto;
             object-fit: cover;
             border-radius: 10px;
         }
 
-        /* Media Queries */
-        @media (max-width: 768px) {
-            .hero-nav__button {
-                font-size: 13px;
-                margin-top: 30rem;
-            }
-            
-            .hero-nav__button a {
-                font-size: 1rem;
-            }
-
-            .custom-img-hero {
-                height: 14rem;
-                margin-bottom: 18rem;
-            }
-            
-            .hero__cnt h1 {
-                margin-bottom: 0;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .pagination {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .page-item {
-                flex: 1;
-                min-width: 40px;
-                text-align: center;
-            }
-            
+        @media (max-width: 600px) {
             .splide__slide img {
                 height: 20rem; /* Tamaño estático para pantallas pequeñas */
             }
         }
     </style>
+    
+    <script>
+        window.addEventListener('scroll', function () {
+            const heroBg = document.querySelector('.hero__bg');
+            const scrollPosition = window.scrollY;
+            heroBg.style.transform = 'translateY(' + scrollPosition * 0.3 + 'px)';
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = document.querySelectorAll(".zoomable-img");
+            const modal = document.getElementById("exampleModal");
+
+            images.forEach(img => {
+                img.addEventListener("click", function (event) {
+                    event.stopPropagation();
+                    modal.style.display = "none";
+                    showFullscreen(this, event);
+                });
+            });
+
+            function showFullscreen(imgElement, event) {
+                const fullscreenContainer = document.createElement("div");
+                fullscreenContainer.classList.add("fullscreen-container");
+
+                const fullscreenImg = document.createElement("img");
+                fullscreenImg.src = imgElement.src;
+                fullscreenImg.classList.add("fullscreen-img");
+
+                const closeButton = document.createElement("button");
+                closeButton.classList.add("btn", "btn-link", "close-btn");
+                closeButton.innerHTML = '<i class="bi bi-x-lg"></i>';
+                closeButton.addEventListener("click", function () {
+                    fullscreenContainer.remove();
+                    modal.style.display = "block";
+                });
+
+                fullscreenContainer.appendChild(fullscreenImg);
+                fullscreenContainer.appendChild(closeButton);
+                document.body.appendChild(fullscreenContainer);
+
+                let scale = 1;
+                let imgX = 0, imgY = 0;
+                let isDragging = false, startX, startY;
+
+                function updateTransform() {
+                    fullscreenImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${scale})`;
+                }
+
+                fullscreenImg.addEventListener("click", function (event) {
+                    const rect = fullscreenImg.getBoundingClientRect();
+                    const offsetX = event.clientX - rect.left;
+                    const offsetY = event.clientY - rect.top;
+
+                    if (scale === 1) {
+                        scale = 2.5;
+                        fullscreenImg.style.cursor = "zoom-out";
+                        imgX = (rect.width / 2 - offsetX) * (scale - 1);
+                        imgY = (rect.height / 2 - offsetY) * (scale - 1);
+                    } else {
+                        scale = 1;
+                        imgX = 0;
+                        imgY = 0;
+                        fullscreenImg.style.cursor = "zoom-in";
+                    }
+                    updateTransform();
+                });
+
+                fullscreenContainer.addEventListener("wheel", function (event) {
+                    event.preventDefault();
+                    const zoomIntensity = 0.2;
+                    const rect = fullscreenImg.getBoundingClientRect();
+                    const offsetX = event.clientX - rect.left;
+                    const offsetY = event.clientY - rect.top;
+
+                    let newScale = scale + (event.deltaY > 0 ? -zoomIntensity : zoomIntensity);
+                    newScale = Math.max(1, Math.min(newScale, 4));
+
+                    if (newScale !== scale) {
+                        imgX = (rect.width / 2 - offsetX) * (newScale - 1);
+                        imgY = (rect.height / 2 - offsetY) * (newScale - 1);
+                        scale = newScale;
+                        updateTransform();
+                    }
+                });
+
+                fullscreenImg.addEventListener("mousedown", function (event) {
+                    if (scale > 1) {
+                        isDragging = true;
+                        startX = event.clientX - imgX;
+                        startY = event.clientY - imgY;
+                        fullscreenImg.classList.add("grabbing");
+                    }
+                });
+
+                window.addEventListener("mousemove", function (event) {
+                    if (isDragging) {
+                        imgX = event.clientX - startX;
+                        imgY = event.clientY - startY;
+                        updateTransform();
+                    }
+                });
+
+                window.addEventListener("mouseup", function () {
+                    isDragging = false;
+                    fullscreenImg.classList.remove("grabbing");
+                });
+
+                document.addEventListener("keydown", function (event) {
+                    if (event.key === "Escape") {
+                        fullscreenContainer.remove();
+                        modal.style.display = "block";
+                    }
+                });
+            }
+        });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
     <div class="hero">
         <div class="hero__bg">
             <picture>
-                <img src="{{ asset('imagenes/atardecer02.jpg') }}" alt="Atardecer en Morelos">
+                <img src="{{ asset('imagenes/atardecer02.jpg') }}">
             </picture>
         </div>
 
         <div class="hero__cnt">
-            <img class="custom-img-hero" src="{{ asset('imagenes/LogoRD.svg') }}" alt="Logo Rentas Directas">
-            <h1 class="custom-rentasDirectas">RENTAS DIRECTAS</h1>
+            <img class="custom-img-hero" src="{{ asset('imagenes/LogoRD.svg') }}" fill="white" alt="Logo UAEM">
+            <h1 class="custom-rentasDirectas" >RENTAS DIRECTAS</h1>
             <p class="custom-text">Tu comodidad es nuestra prioridad</p>
             <div class="hero-nav__button">
                 <a href="#main">Ver más<i class="bi bi-chevron-double-down"></i></a>
@@ -731,63 +878,64 @@
         </div>
     </div>
 
-    <div class="container mt-4">
+    <div class="container mt-4 page-content">
+
         <div class="row mb-3" id="main">
             <nav class="navbar navbar-expand-lg navbar-custom shadow border-15">
                 <div class="container-fluid">
-                    <a class="navbar-brand me-4" href="#" aria-label="Inicio">
-                        <img class="logo_navbar" src="{{ asset('imagenes/LogoRentasDirectas.svg') }}" alt="Logo Rentas Directas">
+                    <a class="navbar-brand" href="#">
+                        <img class="logo_navbar" src="{{ asset('imagenes/LogoRentasDirectas.svg') }}" alt="logo-uaem">
                     </a>
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-            
+
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav me-auto">
-                            <li class="nav-item"><a class="nav-link px-3" href="#">Inicio</a></li>
-                            <li class="nav-item separator d-none d-lg-block"></li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle px-3" href="#" id="ubicacionesDropdown" role="button" 
-                                   data-bs-toggle="dropdown" aria-expanded="false">
-                                    Ubicaciones
+                                <a class="nav-link dropdown-toggle" href="#" id="desDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    DES
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="ubicacionesDropdown">
-                                    <li><a class="dropdown-item" href="#">Jiutepec</a></li>
-                                    <li><a class="dropdown-item" href="#">Temixco</a></li>
+                                <ul class="dropdown-menu" aria-labelledby="desDropdown">
+                                    <li><a class="dropdown-item" href="#">Agropecuarias</a></li>
+                                    <li><a class="dropdown-item" href="#">Artes, Cultura y Diseño</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a class="nav-link px-3" href="#">Catálogo de Casas</a></li>
-                            <li class="nav-item"><a class="nav-link px-3" href="#">Avisos</a></li>
-                            <li class="nav-item"><a class="nav-link px-3" href="#">Contacto</a></li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="unidadesDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Unidades Académicas
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="unidadesDropdown">
+                                    <li><a class="dropdown-item" href="#">Facultad de Ciencias Agropecuarias</a></li>
+                                    <li><a class="dropdown-item" href="#">Facultad de Artes</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item" style="border-right: 1px solid #ddd; margin-right: 10px; margin-left: 10px;"></li>
+                            <li class="nav-item"><a class="nav-link" href="#">Avisos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">Talleres</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">Convocatorias</a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="otrosDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Otros
+                                </a>
+                            </li>
                         </ul>
 
-                        <div class="d-flex align-items-center">
-                            <form class="d-flex me-3">
-                                <div class="input-group border-15">
-                                    <input class="form-control quitarBorderIzquierda" type="search" 
-                                           placeholder="Buscar casa" aria-label="Buscar casa">
-                                    <button class="btn btn-outline-azul quitarBorderDerecha" type="submit" aria-label="Buscar">
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
-                            </form>
-
-                            <div class="dropdown">
-                                <button class="btn btn-outline-azul border-15 dropdown-toggle" 
-                                        type="button" id="userDropdown" data-bs-toggle="dropdown" 
-                                        aria-expanded="false" aria-label="Menú usuario">
-                                    <i class="bi bi-person-circle"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="#">Mi perfil</a></li>
-                                    <li><a class="dropdown-item" href="#">Configuración</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
-                                </ul>
+                        <form class="d-flex border-15">
+                            <div class="input-group border-15">
+                                <input class="form-control quitarBorderIzquierda" type="search" placeholder="Buscar casa" aria-label="Buscar">
+                                <span class="input-group-text quitarBorderDerecha">
+                                    <i class="bi bi-search"></i>
+                                </span>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </nav>
@@ -800,7 +948,7 @@
             </div>
             <div class="col-md-4 text-md-end mt-1 mt-md-0 d-none d-md-block">
                 <div class="d-inline-flex align-items-center p-2 shadow border-15" style="background: white;">
-                    <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="Clima soleado" width="30">
+                    <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="Soleado" width="30">
                     <div class="ms-2">
                         <small class="text-muted">Cuernavaca</small>
                         <h5 class="mb-0">{{ $temperature }} °C</h5>
@@ -814,7 +962,7 @@
                 <div class="swiperCarrusel swiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide shadow border-15">
-                            <img src="https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?q=80&w=1450&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Casa Verde">
+                            <img src="https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?q=80&w=1450&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Imagen 1">
                             <div class="footer">
                                 <div class="event-info">
                                     <div class="icono">
@@ -827,7 +975,7 @@
                             </div>
                         </div>
                         <div class="swiper-slide shadow border-15">
-                            <img src="https://images.unsplash.com/photo-1598714805247-5dd440d87124?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Casa Liz">
+                            <img src="https://images.unsplash.com/photo-1598714805247-5dd440d87124?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Imagen 1">
                             <div class="footer">
                                 <div class="event-info">
                                     <div class="icono">
@@ -840,7 +988,7 @@
                             </div>
                         </div>
                         <div class="swiper-slide shadow border-15">
-                            <img src="https://plus.unsplash.com/premium_photo-1661876449499-26de7959878f?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Bungalow Sicilia">
+                            <img src="https://plus.unsplash.com/premium_photo-1661876449499-26de7959878f?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Imagen 1">
                             <div class="footer">
                                 <div class="event-info">
                                     <div class="icono">
@@ -853,7 +1001,7 @@
                             </div>
                         </div>
                         <div class="swiper-slide shadow border-15">
-                            <img src="{{ asset('imagenes/imagenesCasaNazomi/casa_nozomi.jpg') }}" alt="Casa Nozomi">
+                            <img src="{{ asset('imagenes/imagenesCasaNazomi/casa_nozomi.jpg') }}" alt="Imagen 1">
                             <div class="footer">
                                 <div class="event-info">
                                     <div class="icono">
@@ -867,8 +1015,8 @@
                         </div>
                     </div>
 
-                    <div class="swiper-button-prev" aria-label="Anterior"></div>
-                    <div class="swiper-button-next" aria-label="Siguiente"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
 
                     <div class="swiper-pagination"></div>
                 </div>
@@ -880,7 +1028,7 @@
                 <div class="card p-3 border-15 shadow">
                     <div class="d-flex justify-content-between align-items-center container-pr-custom">
                         <h4 class="titulo-blue">Catálogo de Casas</h4>
-                        <button type="button" class="btn btn-filter" data-bs-toggle="modal" data-bs-target="#fechaModal" aria-label="Filtrar por fecha">
+                        <button type="button" class="btn btn-filter" data-bs-toggle="modal" data-bs-target="#fechaModal">
                             <i class="bi bi-calendar2-plus-fill"></i>
                         </button>
                     </div>
@@ -895,18 +1043,18 @@
                                 </small>
                             </div>
                             <div class="col-3 col-md-3 text-end">
-                                <img src="{{ asset('imagenes/imagenesFincaJiutepec/1_FincaJiutepec.jpg') }}" class="img-fluid rounded imagen-Lista" alt="Finca Jiutepec">
+                                <img src="{{ asset('imagenes/imagenesFincaJiutepec/1_FincaJiutepec.jpg') }}" class="img-fluid rounded imagen-Lista" alt="Aviso">
                             </div>
                         </div>
                     </div>
                     <hr>
                     <div class="container-fluid mt-3">
-                        <nav class="text-center" aria-label="Paginación">
+                        <nav class="text-center">
                             <ul class="pagination d-flex justify-content-center flex-wrap pagination-rounded-flat pagination-success">
                                 <li class="page-item">
-                                    <a class="page-link shadow" href="#" data-abc="true" aria-label="Primera página"><i class="bi bi-arrow-bar-left"></i></a>
+                                    <a class="page-link shadow" href="#" data-abc="true"><i class="bi bi-arrow-bar-left"></i></a>
                                 </li>
-                                <li class="page-item active" aria-current="page">
+                                <li class="page-item active">
                                     <a class="page-link shadow" href="#" data-abc="true">1</a>
                                 </li>
                                 <li class="page-item">
@@ -919,7 +1067,7 @@
                                     <a class="page-link shadow" href="#" data-abc="true">4</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link shadow" href="#" data-abc="true" aria-label="Última página"><i class="bi bi-arrow-bar-right"></i></a>
+                                    <a class="page-link shadow" href="#" data-abc="true"><i class="bi bi-arrow-bar-right"></i></a>
                                 </li>
                             </ul>
                         </nav>
@@ -940,7 +1088,7 @@
                                 </small>
                             </div>
                             <div class="col-3 col-md-3 text-md-end text-center">
-                                <img src="https://cdn-icons-png.flaticon.com/512/10135/10135431.png" alt="Icono de fraude" class="img-fluid rounded imagen-Lista">
+                                <img src="https://cdn-icons-png.flaticon.com/512/10135/10135431.png" alt="Fraude" class="img-fluid rounded imagen-Lista">
                             </div>
                         </div>
                     </div>
@@ -955,7 +1103,6 @@
                                 </small>
                             </div>
                             <div class="col-3 col-md-3 text-md-end text-center">
-                                <!-- Espacio intencionalmente vacío para mantener alineación -->
                             </div>
                         </div>
                     </div>
@@ -970,15 +1117,14 @@
                         <b>© 2025 · Desarrollado por · Victor Diaz Medina</b>
                     </div>
                     <div class="col-md-4 text-center text-md-end">
-                        <a href="#" class="mx-2" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-                        <a href="#" class="mx-2" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="mx-2"><i class="bi bi-whatsapp"></i></a>
+                        <a href="#" class="mx-2"><i class="bi bi-instagram"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Casa Verde -->
     <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content modal-content-custom">
@@ -987,19 +1133,32 @@
                     <button type="button" class="btn-close custom-close-btn" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row-custom mt-2 p-2 card-custom-white shadow border-1">
                                 <div class="splide" id="example-grid">
                                     <div class="splide__track">
                                         <ul class="splide__list">
-                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1 zoomable-img" src="{{ asset('imagenes/imagenesFincaJiutepec/1_FincaJiutepec.jpg') }}" alt="Finca Jiutepec 1"></li>
-                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1 zoomable-img" src="{{ asset('imagenes/imagenesFincaJiutepec/2_FincaJiutepec.jpg') }}" alt="Finca Jiutepec 2"></li>
-                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1 zoomable-img" src="{{ asset('imagenes/imagenesFincaJiutepec/3_FincaJiutepec.jpg') }}" alt="Finca Jiutepec 3"></li>
-                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1 zoomable-img" src="{{ asset('imagenes/imagenesFincaJiutepec/4_FincaJiutepec.jpg') }}" alt="Finca Jiutepec 4"></li>
-                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1 zoomable-img" src="{{ asset('imagenes/imagenesFincaJiutepec/5_FincaJiutepec.jpg') }}" alt="Finca Jiutepec 5"></li>
-                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1 zoomable-img" src="{{ asset('imagenes/imagenesFincaJiutepec/6_FincaJiutepec.jpg') }}" alt="Finca Jiutepec 6"></li>
-                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1 zoomable-img" src="{{ asset('imagenes/imagenesFincaJiutepec/7_FincaJiutepec.jpg') }}" alt="Finca Jiutepec 7"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/1_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/2_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/3_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/4_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/5_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/6_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/7_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/1_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/2_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/3_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/4_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/5_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/6_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/7_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/1_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/2_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/3_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/4_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
+                                            <li class="p-splide__slide splide__slide"><img class="img-fluid shadow border-1" src="{{ asset('imagenes/imagenesFincaJiutepec/5_FincaJiutepec.jpg') }}" alt="Imagen 1"></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1010,41 +1169,9 @@
                                 <h4><b>FINCA JIUTEPEC</b></h4>
                                 <h6 class="pb-3">Jiutepec, Mor.</h6>
 
-                                <div class="text-break">
-                                    <p>📍Ubicada en el fraccionamiento Las Fincas (Jiutepec Morelos), cuenta con seguridad 24 horas,&nbsp;</p>
-                                    <p>El fraccionamiento cuenta con canchas de futbol, tenis, y muchos jardines que pertenecen al fraccionamiento, a 03 minutos en coche, encuentras tiendas de todo tipo como: abarrotes, carnicerías, pollerías, Oxxo, farmacia etc.,&nbsp;</p>
-                                    <p><br></p>
-                                    <p>👨‍👩‍👧‍👦 Capacidad 32 huéspedes en camas.&nbsp;</p>
-                                    <p>🚘 Garaje para 05 coches, (pueden estacionarse más coches sobre la calle de manera segura por la vigilancia del fraccionamiento).&nbsp;</p>
-                                    <p>🛋️ Estancia muy amplia con sala, pantalla con cable y chimenea.&nbsp;</p>
-                                    <p>🏓 Sala de juegos con mesa de billar y mesa de Ping pong.</p>
-                                    <p>🍳Cocina muy amplia con estufa industrial, accesorios para cocinar y comer.</p>
-                                    <p>🪑La casa cuenta con 02 comedores uno en la cocina y otro en la estancia.</p>
-                                    <p>⛱️ Mobiliario de jardín mesas, sillas, camastros, sombrillas.&nbsp;</p>
-                                    <p>🥩 Zona exterior de asador con barra y fregadero.&nbsp;</p>
-                                    <p>🌊 Alberca con jacuzzi, (cuenta con caldera de gas con costo extra).&nbsp;</p>
-                                    <p>💻 Internet de alta velocidad.&nbsp;</p>
-                                    <p>🛝 Área de juegos para niños</p>
-                                    <p>Contamos con corral y cuna de viaje&nbsp;&nbsp;</p>
-                                    <p><br></p>
-                                    <p>&nbsp;Son 06 habitaciones en total:</p>
-                                    <p><b>~(Planta alta)</b></p>
-                                    <p>🛏️ Habitación principal: 4 camas matrimonial, 01 sofá cama matrimonial, baño completo y closet.&nbsp;</p>
-                                    <p>🛏️ Habitación 02: 02 camas matrimoniales, 01 cama individual, baño completo, closet.&nbsp;</p>
-                                    <p>🛏️ Habitación 03: 01 cama king size, cuna infantil, baño completo, clóset.&nbsp;</p>
-                                    <p>🛏️ Habitación 04: 3 camas individuales, 1 cama matrimonial, 1 sofá-cama individual, baño completo, clóset.&nbsp;</p>
-                                    <p><br></p>
-                                    <p><b>~(Planta baja)</b></p>
-                                    <p>🛏️ Habitación 05: 02 camas matrimoniales, 01 cama individual.&nbsp;</p>
-                                    <p>🛏️ Habitación 06: 1 cama King, 1 cama individual&nbsp;</p>
-                                    <p>🚽 Medio baño compartido para estas 02 habitaciones de planta baja.</p>
-                                    <p>🚽2 Baños completos en la zona de la alberca.&nbsp;</p>
-                                    <p>👀 La casa se entrega completamente organizada, limpia y fumigada.</p>
-                                    <p>🧼🧻🧺 Se pone jabón, Shampo, papel higiénico y toallas dependiendo la cantidad de huéspedes.&nbsp;</p>
-                                    <p>🐶 Aceptamos Mascotas medianas.&nbsp;</p>
-                                    <p>📆 Temporada baja mínimo 02 noches,</p>
-                                    <p>Temporada alta mínimo 04 noches.</p>
-                                </div>
+                                <p class="text-break">
+                                    <p>📍Ubicada en el fraccionamiento Las Fincas (Jiutepec Morelos), cuenta con seguridad 24 horas,&nbsp;</p><p>El fraccionamiento cuenta con canchas de futbol, tenis, y muchos jardines que pertenecen al fraccionamiento, a 03 minutos en coche, encuentras tiendas de todo tipo como: abarrotes, carnicerías, pollerías, Oxxo, farmacia etc.,&nbsp;</p><p><br></p><p>👨‍👩‍👧‍👦 Capacidad 32 huéspedes en camas.&nbsp;</p><p>🚘 Garaje para 05 coches, (pueden estacionarse más coches sobre la calle de manera segura por la vigilancia del fraccionamiento).&nbsp;</p><p>🛋️ Estancia muy amplia con sala, pantalla con cable y chimenea.&nbsp;</p><p>🏓 Sala de juegos con mesa de billar y mesa de Ping pong.</p><p>🍳Cocina muy amplia con estufa industrial, accesorios para cocinar y comer.</p><p>🪑La casa cuenta con 02 comedores uno en la cocina y otro en la estancia.</p><p>⛱️ Mobiliario de jardín mesas, sillas, camastros, sombrillas.&nbsp;</p><p>🥩 Zona exterior de asador con barra y fregadero.&nbsp;</p><p>🌊 Alberca con jacuzzi, (cuenta con caldera de gas con costo extra).&nbsp;</p><p>💻 Internet de alta velocidad.&nbsp;</p><p>🛝 Área de juegos para niños</p><p>Contamos con corral y cuna de viaje&nbsp;&nbsp;</p><p><br></p><p>&nbsp;Son 06 habitaciones en total:</p><p><b>~(Planta alta)</b></p><p>🛏️ Habitación principal: 4 camas matrimonial, 01 sofá cama matrimonial, baño completo y closet.&nbsp;</p><p>🛏️ Habitación 02: 02 camas matrimoniales, 01 cama individual, baño completo, closet.&nbsp;</p><p>🛏️ Habitación 03: 01 cama king size, cuna infantil, baño completo, clóset.&nbsp;</p><p>🛏️ Habitación 04: 3 camas individuales, 1 cama matrimonial, 1 sofá-cama individual, baño completo, clóset.&nbsp;</p><p><br></p><p><b>~(Planta baja)</b></p><p>🛏️ Habitación 05: 02 camas matrimoniales, 01 cama individual.&nbsp;</p><p>🛏️ Habitación 06: 1 cama King, 1 cama individual&nbsp;</p><p>🚽 Medio baño compartido para estas 02 habitaciones de planta baja.</p><p>🚽2 Baños completos en la zona de la alberca.&nbsp;</p><p>👀 La casa se entrega completamente organizada, limpia y fumigada.</p><p>🧼🧻🧺 Se pone jabón, Shampo, papel higiénico y toallas dependiendo la cantidad de huéspedes.&nbsp;</p><p>🐶 Aceptamos Mascotas medianas.&nbsp;</p><p>📆 Temporada baja mínimo 02 noches,</p><p>Temporada alta mínimo 04 noches.</p>
+                                </p>
                             </div>
 
                             <div class="row row-custom mt-3 p-2 card-custom-white shadow border-1" style="place-items: end;">
@@ -1065,13 +1192,12 @@
         </div>
     </div>
 
-    <!-- Modal Fechas -->
     <div class="modal fade" id="fechaModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title texto-header" id="fechaModalLabel">Filtrado por Fechas</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="fechaModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group d-flex">
@@ -1089,209 +1215,125 @@
         </div>
     </div>
 
-    <!-- Fullscreen Image Modal (dinámico) -->
-    <div id="fullscreenModal" class="fullscreen-container" style="display: none;">
-        <img id="fullscreenImg" class="fullscreen-img" src="" alt="">
-        <button class="close-btn"><i class="bi bi-x-lg"></i></button>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-grid@0.4.1/dist/js/splide-extension-grid.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
-    
     
     <script>
-        // Configuración Flatpickr
-        document.addEventListener('DOMContentLoaded', function() {
-
-            document.getElementById('exampleModal').addEventListener('click', function() {
-                var modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
-                modal.hide();
-            });
-            document.getElementById('fechaModal').addEventListener('click', function() {
-                var modal = bootstrap.Modal.getInstance(document.getElementById('fechaModal'));
-                modal.hide();
-            });
-
-
-            flatpickr("#fechas", {
-                mode: "range",
-                inline: false,
-                maxDate: "today",
-                altInput: true,
-                altFormat: "l j, F",
-                dateFormat: "Y-m-d",
-                locale: "es"
-            });
-
-            // Inicializar Swiper
-            var swiperCarrusel = new Swiper('.swiperCarrusel', {
-                loop: true,
-                autoplay: {
-                    delay: 300000,
-                    disableOnInteraction: false
+        config = {
+            mode: "range",
+            inline: false,
+            maxDate: "today",
+            altInput: true,
+            altFormat: "l j, F",
+            dateFormat: "Y-m-d",
+            language: 'es',
+            locale: {
+                firstDayOfWeek: 1,
+                weekdays: {
+                    shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
                 },
-                freeMode: true,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+                months: {
+                    shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+                    longhand: ['Enero', 'Febrero', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre',
+                        'Octubre', 'Noviembre', 'Diciembre'
+                    ],
                 },
-                pagination: {
-                    el: '.swiper-pagination',
-                    type: "progressbar",
-                },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 20,
-                    },
-                    768: {
-                        slidesPerView: 4,
-                        spaceBetween: 40,
-                    },
-                    1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 30,
-                    },
-                }
-            });
-
-            // Inicializar Splide
-            new Splide('#example-grid', {
-                type: 'loop',
-                height: '20rem',
-                gap: '1em',
-                perPage: 2,
-                perMove: 1,
-                pagination: false,
-                grid: {
-                    dimensions: [ [1, 1], [2, 2], [1, 1], [2, 2], [1, 1] ],
-                    gap: {
-                        row: '1em',
-                        col: '1em'
-                    }
-                },
-                breakpoints: {
-                    600: {
-                        height: '20rem',
-                        gap: '.5em',
-                        perPage: 1,
-                        grid: {
-                            dimensions: [ [1, 1] ],
-                            gap: {
-                                row: '.5em',
-                                col: '.5em'
-                            }
-                        }
-                    }
-                }
-            }).mount( window.splide.Extensions );
-
-            // Efecto parallax en hero
-            window.addEventListener('scroll', function() {
-                const heroBg = document.querySelector('.hero__bg');
-                const scrollPosition = window.scrollY;
-                heroBg.style.transform = 'translateY(' + scrollPosition * 0.3 + 'px)';
-            });
-
-            // Zoom de imágenes
-            const images = document.querySelectorAll(".zoomable-img");
-            const fullscreenModal = document.getElementById("fullscreenModal");
-            const fullscreenImg = document.getElementById("fullscreenImg");
-            const closeBtn = document.querySelector(".close-btn");
-
-            images.forEach(img => {
-                img.addEventListener("click", function() {
-                    fullscreenImg.src = this.src;
-                    fullscreenImg.alt = this.alt;
-                    fullscreenModal.style.display = "flex";
-                });
-            });
-
-            closeBtn.addEventListener("click", function() {
-                fullscreenModal.style.display = "none";
-            });
-
-            // Zoom y arrastre de imagen en pantalla completa
-            let scale = 1;
-            let imgX = 0, imgY = 0;
-            let isDragging = false, startX, startY;
-
-            function updateTransform() {
-                fullscreenImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${scale})`;
             }
+        }
+        flatpickr("#fechas", config);
+    </script>
 
-            fullscreenImg.addEventListener("click", function(event) {
-                const rect = fullscreenImg.getBoundingClientRect();
-                const offsetX = event.clientX - rect.left;
-                const offsetY = event.clientY - rect.top;
+    <script>
+        var swiperCarrusel = new Swiper('.swiperCarrusel', {
+            loop: true,
+            autoplay: {
+                delay: 300000,
+                disableOnInteraction: false
+            },
+            freeMode: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                type: "progressbar",
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 4,
+                    spaceBetween: 40,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                },
+            },
 
-                if (scale === 1) {
-                    scale = 2.5;
-                    fullscreenImg.style.cursor = "zoom-out";
-                    imgX = (rect.width / 2 - offsetX) * (scale - 1);
-                    imgY = (rect.height / 2 - offsetY) * (scale - 1);
-                } else {
-                    scale = 1;
-                    imgX = 0;
-                    imgY = 0;
-                    fullscreenImg.style.cursor = "zoom-in";
-                }
-                updateTransform();
-            });
-
-            fullscreenModal.addEventListener("wheel", function(event) {
-                event.preventDefault();
-                const zoomIntensity = 0.2;
-                const rect = fullscreenImg.getBoundingClientRect();
-                const offsetX = event.clientX - rect.left;
-                const offsetY = event.clientY - rect.top;
-
-                let newScale = scale + (event.deltaY > 0 ? -zoomIntensity : zoomIntensity);
-                newScale = Math.max(1, Math.min(newScale, 4));
-
-                if (newScale !== scale) {
-                    imgX = (rect.width / 2 - offsetX) * (newScale - 1);
-                    imgY = (rect.height / 2 - offsetY) * (newScale - 1);
-                    scale = newScale;
-                    updateTransform();
-                }
-            });
-
-            fullscreenImg.addEventListener("mousedown", function(event) {
-                if (scale > 1) {
-                    isDragging = true;
-                    startX = event.clientX - imgX;
-                    startY = event.clientY - imgY;
-                    fullscreenImg.classList.add("grabbing");
-                }
-            });
-
-            window.addEventListener("mousemove", function(event) {
-                if (isDragging) {
-                    imgX = event.clientX - startX;
-                    imgY = event.clientY - startY;
-                    updateTransform();
-                }
-            });
-
-            window.addEventListener("mouseup", function() {
-                isDragging = false;
-                fullscreenImg.classList.remove("grabbing");
-            });
-
-            document.addEventListener("keydown", function(event) {
-                if (event.key === "Escape") {
-                    fullscreenModal.style.display = "none";
-                }
-            });
         });
     </script>
+
+    <script>
+        var swiperCards;
+
+        $('#exampleModal').on('shown.bs.modal', function () {
+            swiperCards = new Swiper(".swiperCards", {
+                effect: "cards",
+                grabCursor: true,
+            });
+        });
+
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            if (swiperCards) {
+                swiperCards.destroy();
+            }
+        });
+    </script>
+
+    <script>
+      // Inicializar Splide con la configuración
+      document.addEventListener('DOMContentLoaded', function () {
+        new Splide('#example-grid', {
+          type: 'loop', // Tipo de slider
+          height: '20rem', // Altura del slider
+          gap: '1em', // Espacio entre slides
+          perPage: 2, // Número de slides por página
+          perMove: 1, // Número de slides que se mueven por vez
+          pagination: false,
+          grid: {
+            dimensions: [ [1, 1], [2, 2], [1, 1], [2, 2], [1, 1] ], // Dimensiones de la cuadrícula
+            gap: {
+              row: '1em', // Espacio entre filas
+              col: '1em'  // Espacio entre columnas
+            }
+          },
+          breakpoints: { // Configuración para pantallas pequeñas
+            600: {
+              height: '20rem',
+              gap: '.5em', // Espacio entre slides
+              perPage: 1,
+              grid: {
+                dimensions: [ [1, 1] ],
+                gap: {
+                  row: '.5em',
+                  col: '.5em'
+                }
+              }
+            }
+          }
+        }).mount( window.splide.Extensions );
+      });
+    </script>
+
 </body>
 </html>
