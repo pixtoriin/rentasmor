@@ -438,23 +438,7 @@
         }
 
         .modal-header-custom {
-            position: relative;
-            min-height: 30px;
-            overflow: hidden;
-        }
-
-        .modal-header-custom::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             background: var(--blueInstitucional);
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            transform: scaleX(-1);
         }
 
         .modal-header-custom .texto-header {
@@ -714,6 +698,30 @@
     </style>
 </head>
 <body>
+    @if (session('error'))
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
+            <div id="toastError" class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ session('error') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const toastEl = document.getElementById('toastError');
+                const toast = new bootstrap.Toast(toastEl, {
+                    delay: 5000
+                });
+                toast.show();
+            });
+        </script>
+    @endif
+
+
     <div class="hero">
         <div class="hero__bg">
             <picture>
@@ -781,10 +789,21 @@
                                     <i class="bi bi-person-circle"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="#">Mi perfil</a></li>
-                                    <li><a class="dropdown-item" href="#">Configuración</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                                    @auth
+                                        <li><a class="dropdown-item" href="{{ route('vistaDashboard') }}">Reservaciones</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                                            </form>
+                                        </li>
+                                    @else
+                                        <li><a class="dropdown-item" href="{{ route('google.login') }}">
+                                            <i class="bi bi-google me-2"></i> Iniciar con Google
+                                        </a></li>
+                                        <!-- Puedes añadir más opciones de login aquí -->
+                                    @endauth
                                 </ul>
                             </div>
                         </div>
@@ -978,13 +997,13 @@
         </div>
     </div>
 
-    <!-- Modal Casa Verde -->
-    <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <!-- Modal FINCA JIUTEPEC -->
+    <div class="modal fade" id="exampleModal" data-bs-backdrop="static" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-custom">
-                    <h5 class="modal-title texto-header" id="cursoModalLabel">CASA VERDE | Jiutepec, Mor.</h5>
-                    <button type="button" class="btn-close custom-close-btn" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <h5 class="modal-title texto-header">FINCA JIUTEPEC | Jiutepec, Mor.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -1064,9 +1083,19 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="exampleModalsss" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelue">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title texto-header" id="cursoModalLabel">CASA VERDE | Jiutepec, Mor.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Fechas -->
-    <div class="modal fade" id="fechaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="fechaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
@@ -1098,8 +1127,7 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-grid@0.4.1/dist/js/splide-extension-grid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -1110,15 +1138,16 @@
         // Configuración Flatpickr
         document.addEventListener('DOMContentLoaded', function() {
 
-            document.getElementById('exampleModal').addEventListener('click', function() {
-                var modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
-                modal.hide();
+            
+            // Verificar cierre del modal Casa Verde
+            document.querySelector('#exampleModal .btn-close').addEventListener('click', function() {
+                console.log('Botón cerrar clickeado en Casa Verde');
             });
-            document.getElementById('fechaModal').addEventListener('click', function() {
-                var modal = bootstrap.Modal.getInstance(document.getElementById('fechaModal'));
-                modal.hide();
+            
+            // Verificar cierre del modal Fechas
+            document.querySelector('#fechaModal .btn-close').addEventListener('click', function() {
+                console.log('Botón cerrar clickeado en Fechas');
             });
-
 
             flatpickr("#fechas", {
                 mode: "range",

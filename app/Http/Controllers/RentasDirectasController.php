@@ -13,11 +13,7 @@ use App\Mail\CollageMail;
 class RentasDirectasController extends Controller
 {
 
-    public function rutas(Request $request)
-    {
-        
-       return view('vistaPrincipal.rutas');  
-    }
+   
     public function vistaPrincipal(Request $request)
     {
          // Obtener ciudad desde la URL o usar "Mexico City" por defecto
@@ -86,50 +82,6 @@ class RentasDirectasController extends Controller
                 return 'https://cdn-icons-png.flaticon.com/512/1163/1163657.png';
         }
     }
-
-    public function getHistorias(Request $request)
-    {
-        $storyIndex = $request->input('storyIndex');
-    
-        $stories = [
-            0 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/800"],
-                ["type" => "image", "src" => "https://picsum.photos/450/800"],
-                ["type" => "image", "src" => "https://picsum.photos/450/800"],
-                ["type" => "image", "src" => "https://picsum.photos/450/800"],
-            ],
-            1 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/820"],
-                ["type" => "video", "src" => "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"],
-            ],
-            2 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/830"],
-                ["type" => "video", "src" => "https://exit109.com/~dnn/clips/RW20seconds_1.mp4"],
-                ["type" => "image", "src" => "https://picsum.photos/450/860"],
-            ],
-            3 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/840"],
-                ["type" => "video", "src" => "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"],
-                ["type" => "image", "src" => "https://picsum.photos/450/870"],
-                ["type" => "image", "src" => "https://picsum.photos/450/880"],
-            ],
-            4 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/850"],
-                ["type" => "video", "src" => "https://www.w3schools.com/html/mov_bbb.mp4"],
-                ["type" => "image", "src" => "https://picsum.photos/450/890"],
-                ["type" => "image", "src" => "https://picsum.photos/450/900"],
-                ["type" => "image", "src" => "https://picsum.photos/450/910"],
-            ]
-        ];
-    
-        if (!isset($stories[$storyIndex])) {
-            return Response::json(['error' => 'Historia no encontrada'], 404);
-        }
-    
-        return Response::json($stories[$storyIndex]);
-    }
-    
-
     public function welcome(Request $request)
     {
         // Obtener ciudad desde la URL o usar "Mexico City" por defecto
@@ -178,9 +130,59 @@ class RentasDirectasController extends Controller
             // Si no se pudo obtener el clima
             return view('welcome', compact('cityName', 'temperature', 'weatherInfo', 'fecha'));
         }
-   }
+    }
+    public function vistaDashboard(Request $request)
+    {
+        return view('vistaAdmin.vistaDashboard');
+    }
 
 
+
+    public function rutas(Request $request)
+    {
+       return view('vistaPrincipal.rutas');  
+    }
+    public function getHistorias(Request $request)
+    {
+        $storyIndex = $request->input('storyIndex');
+    
+        $stories = [
+            0 => [
+                ["type" => "image", "src" => "https://picsum.photos/450/800"],
+                ["type" => "image", "src" => "https://picsum.photos/450/800"],
+                ["type" => "image", "src" => "https://picsum.photos/450/800"],
+                ["type" => "image", "src" => "https://picsum.photos/450/800"],
+            ],
+            1 => [
+                ["type" => "image", "src" => "https://picsum.photos/450/820"],
+                ["type" => "video", "src" => "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"],
+            ],
+            2 => [
+                ["type" => "image", "src" => "https://picsum.photos/450/830"],
+                ["type" => "video", "src" => "https://exit109.com/~dnn/clips/RW20seconds_1.mp4"],
+                ["type" => "image", "src" => "https://picsum.photos/450/860"],
+            ],
+            3 => [
+                ["type" => "image", "src" => "https://picsum.photos/450/840"],
+                ["type" => "video", "src" => "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"],
+                ["type" => "image", "src" => "https://picsum.photos/450/870"],
+                ["type" => "image", "src" => "https://picsum.photos/450/880"],
+            ],
+            4 => [
+                ["type" => "image", "src" => "https://picsum.photos/450/850"],
+                ["type" => "video", "src" => "https://www.w3schools.com/html/mov_bbb.mp4"],
+                ["type" => "image", "src" => "https://picsum.photos/450/890"],
+                ["type" => "image", "src" => "https://picsum.photos/450/900"],
+                ["type" => "image", "src" => "https://picsum.photos/450/910"],
+            ]
+        ];
+    
+        if (!isset($stories[$storyIndex])) {
+            return Response::json(['error' => 'Historia no encontrada'], 404);
+        }
+    
+        return Response::json($stories[$storyIndex]);
+    }
     public function enviarCorreo(Request $request)
     {
         $data = json_decode($request->getContent(), true);
