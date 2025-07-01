@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\CollageMail;
+use DB;
+
 
 class RentasDirectasController extends Controller
 {
@@ -137,71 +137,4 @@ class RentasDirectasController extends Controller
     }
 
 
-
-    public function rutas(Request $request)
-    {
-       return view('vistaPrincipal.rutas');  
-    }
-    public function getHistorias(Request $request)
-    {
-        $storyIndex = $request->input('storyIndex');
-    
-        $stories = [
-            0 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/800"],
-                ["type" => "image", "src" => "https://picsum.photos/450/800"],
-                ["type" => "image", "src" => "https://picsum.photos/450/800"],
-                ["type" => "image", "src" => "https://picsum.photos/450/800"],
-            ],
-            1 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/820"],
-                ["type" => "video", "src" => "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"],
-            ],
-            2 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/830"],
-                ["type" => "video", "src" => "https://exit109.com/~dnn/clips/RW20seconds_1.mp4"],
-                ["type" => "image", "src" => "https://picsum.photos/450/860"],
-            ],
-            3 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/840"],
-                ["type" => "video", "src" => "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"],
-                ["type" => "image", "src" => "https://picsum.photos/450/870"],
-                ["type" => "image", "src" => "https://picsum.photos/450/880"],
-            ],
-            4 => [
-                ["type" => "image", "src" => "https://picsum.photos/450/850"],
-                ["type" => "video", "src" => "https://www.w3schools.com/html/mov_bbb.mp4"],
-                ["type" => "image", "src" => "https://picsum.photos/450/890"],
-                ["type" => "image", "src" => "https://picsum.photos/450/900"],
-                ["type" => "image", "src" => "https://picsum.photos/450/910"],
-            ]
-        ];
-    
-        if (!isset($stories[$storyIndex])) {
-            return Response::json(['error' => 'Historia no encontrada'], 404);
-        }
-    
-        return Response::json($stories[$storyIndex]);
-    }
-    public function enviarCorreo(Request $request)
-    {
-        $data = json_decode($request->getContent(), true);
-
-        if (!empty($data['imagen'])) {
-            $imagen_base64 = $data['imagen'];
-            $imagen_base64 = str_replace('data:image/png;base64,', '', $imagen_base64);
-            $imagen_base64 = str_replace(' ', '+', $imagen_base64);
-            $imagen_binaria = base64_decode($imagen_base64);
-
-            $nombreArchivo = 'collage_' . uniqid() . '.png';
-            $rutaArchivo = 'public/imagenes/' . $nombreArchivo;
-
-            Storage::put($rutaArchivo, $imagen_binaria);
-
-
-            return response()->json(['message' => 'Collage enviado por correo con éxito']);
-        }
-
-        return response()->json(['message' => 'No se recibió imagen'], 400);
-    }
 }

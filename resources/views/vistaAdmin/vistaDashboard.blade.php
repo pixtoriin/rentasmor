@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Dashboard Neon</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -10,6 +12,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
             --primary-color: #6a11cb;
@@ -22,7 +29,7 @@
             --card-bg-light: rgba(255, 255, 255, 0.9);
             --card-bg-dark: rgba(30, 30, 40, 0.9);
             --text-light: #ffffff;
-            --text-dark: #fff;
+            --text-dark: #000000;
             --border-radius: 12px;
             --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             --box-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -32,7 +39,6 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--light-bg);
-            color: var(--text-light);
             transition: background-color 0.3s ease, color 0.3s ease;
             min-height: 100vh;
         }
@@ -525,6 +531,123 @@
             flex: 0 0 100%;
             min-width: 100%;
         }
+
+        
+    </style>
+
+    <style>
+        /* En tu archivo CSS */
+        .note-editor {
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .note-editor.border-danger {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+
+        .note-editor.border-success {
+            border-color: #198754 !important;
+        }
+
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            color: #dc3545;
+        }
+
+        .is-invalid ~ .invalid-feedback,
+        .is-invalid ~ .note-editor + .invalid-feedback {
+            display: block;
+        }
+    </style>
+
+    <style>
+        /* Estilos para la galería de imágenes */
+        #imageGallery {
+            min-height: 100px;
+        }
+
+        .image-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            aspect-ratio: 1 / 1;
+        }
+
+        .image-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-card:hover .image-actions {
+            opacity: 1;
+        }
+
+        .dropzone {
+            background-color: rgba(0,0,0,0.02);
+            border: 2px dashed #ced4da !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dropzone:hover {
+            background-color: rgba(0,0,0,0.05);
+            border-color: #6a11cb !important;
+        }
+
+        .dz-message {
+            padding: 20px;
+        }
+
+        /* Estilos para las miniaturas de imágenes */
+        .thumbnail-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .upload-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background-color: #f1f1f1;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #6a11cb;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
     </style>
 </head>
 <body>
@@ -542,6 +665,16 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ route('welcome') }}">
                             <i class="bi bi-globe me-1"></i> Página principal
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#nuevaCasaModal">
+                            <i class="bi bi-house-add-fill me-1"></i> Nueva casa
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#iraCasaModal">
+                            <i class="bi bi-house-up-fill me-1"></i> Ir a casa
                         </a>
                     </li>
                 </ul>
@@ -597,151 +730,67 @@
 
     <!-- Desktop Content -->
     <div class="desktop-section container-fluid mt-4">
+        <!-- Tarjetas de resumen -->
         <div class="row mb-4 g-4">
             <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow h-100 py-2 gradient-primary text-white hover-scale">
+                <div class="card border-0 h-100 py-2 bg-white shadow-sm hover-scale border-start border-primary border-4">
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col me-2">
-                                <div class="text-xs fw-bold text-uppercase mb-1 opacity-75">Reservaciones</div>
-                                <div class="h2 mb-0 fw-bold">20</div>
-                                <div class="mt-2 small">
-                                    <span class="opacity-75"> del mes actual</span>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-calendar-check card-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow h-100 py-2 gradient-success text-white hover-scale">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col me-2">
-                                <div class="text-xs fw-bold text-uppercase mb-1 opacity-75">Casas disponibles</div>
-                                <div class="h2 mb-0 fw-bold">50</div>
-                                <div class="mt-2 small">
-                                    <span class="opacity-75">  el siguiente fin</span>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-house-check card-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow h-100 py-2 gradient-warning text-white hover-scale">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col me-2">
-                                <div class="text-xs fw-bold text-uppercase mb-1 opacity-75">Ingreso</div>
-                                <div class="h2 mb-0 fw-bold">$35,000</div>
-                                <div class="mt-2 small">
-                                    <span class="opacity-75"> semanal</span>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-currency-dollar card-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow h-100 py-2 gradient-danger text-white hover-scale">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col me-2">
-                                <div class="text-xs fw-bold text-uppercase mb-1 opacity-75">RESERVACIONES</div>
-                                <div class="h2 mb-0 fw-bold">45</div>
-                                <div class="mt-2 small">
-                                    <span class="opacity-75"> totales cerradas</span>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-calendar-minus card-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-            
-        <div class="row">
-           <div class="col-lg-6">
-                <!-- Chart -->
-                <div class="card mb-4 hover-scale">
-                    <div class="card-header bg-transparent">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="m-0 fw-bold">
-                                <i class="bi bi-bar-chart-line me-2"></i>Reservaciones Mensuales
-                            </h6>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="chartDropdown" data-bs-toggle="dropdown">
-                                    <i class="bi bi-filter"></i> Filtros
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><h6 class="dropdown-header">Filtrar por</h6></li>
-                                    <li><a class="dropdown-item" href="#">2025</a></li>
-                                    <li><a class="dropdown-item" href="#">2024</a></li>
-                                    <li><a class="dropdown-item" href="#">2023</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Todos los años</a></li>
-                                </ul>
+                            <div>
+                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Reservaciones</div>
+                                <div class="h3 mb-0 fw-bold text-dark">20</div>
+                                <div class="mt-2 small text-muted">del mes actual</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container">
-                            <div id="apexChart"></div>
+                            <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-calendar-check text-primary" style="font-size: 1.5rem;"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Sidebar -->
-            <div class="col-lg-6">
-                <!-- Timeline -->
-                <div class="card mb-4 hover-scale">
-                    <div class="card-header bg-transparent">
-                        <h6 class="m-0 fw-bold">
-                            <i class="bi bi-calendar2-week me-2"></i>Próximas Reservaciones
-                        </h6>
-                    </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-0 h-100 py-2 bg-white shadow-sm hover-scale border-start border-success border-4">
                     <div class="card-body">
-                        <div class="timeline">
-                            <div class="timeline-item success">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="card-title fw-bold mb-1">Casa LIZ</h6>
-                                    <small class="text-muted"><i class="bi bi-calendar4-event me-1"></i>Jueves, 17 / 04 / 25</small>
-                                </div>
-                                <p class="small mb-0 text-muted">Luis Adolfo Castellanos Manjarrez</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Casas disponibles</div>
+                                <div class="h3 mb-0 fw-bold text-dark">50</div>
+                                <div class="mt-2 small text-muted">el siguiente fin</div>
                             </div>
-                            <div class="timeline-item success">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="fw-bold mb-1">Casa LIZ</h6>
-                                    <small class="text-muted"><i class="bi bi-calendar4-event me-1"></i>Lunes, 21 / 04 / 25</small>
-                                </div>
-                                <p class="small mb-0 text-muted">Petra Ernestina Tabira Porcayo</p>
+                            <div class="bg-success bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-house-check text-success" style="font-size: 1.5rem;"></i>
                             </div>
-                            <div class="timeline-item secondary">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="fw-bold mb-1">Casa LIZ</h6>
-                                    <small class="text-muted"><i class="bi bi-calendar4-event me-1"></i>Viernes, 25 / 04 / 25</small>
-                                </div>
-                                <p class="small mb-0 text-muted">Edgar Ivan Cruz Duran</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-0 h-100 py-2 bg-white shadow-sm hover-scale border-start border-warning border-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Ingreso</div>
+                                <div class="h3 mb-0 fw-bold text-dark">$35,000</div>
+                                <div class="mt-2 small text-muted">semanal</div>
                             </div>
-                            <div class="timeline-item secondary">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="fw-bold mb-1">Casa Verde</h6>
-                                    <small class="text-muted"><i class="bi bi-calendar4-event me-1"></i>Viernes, 25 / 04 / 25</small>
-                                </div>
-                                <p class="small mb-0 text-muted">Rafael Fuentes Aburto</p>
+                            <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-currency-dollar text-warning" style="font-size: 1.5rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-0 h-100 py-2 bg-white shadow-sm hover-scale border-start border-danger border-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-xs fw-bold text-uppercase mb-1 text-muted">RESERVACIONES</div>
+                                <div class="h3 mb-0 fw-bold text-dark">45</div>
+                                <div class="mt-2 small text-muted">totales cerradas</div>
+                            </div>
+                            <div class="bg-danger bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-calendar-minus text-danger" style="font-size: 1.5rem;"></i>
                             </div>
                         </div>
                     </div>
@@ -749,16 +798,112 @@
             </div>
         </div>
         
+        <!-- Gráfico y calendario -->
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm mb-4 hover-scale">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 fw-bold text-dark">
+                                <i class="bi bi-bar-chart-line me-2 text-primary"></i>Reservaciones Mensuales
+                            </h6>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="chartDropdown" data-bs-toggle="dropdown">
+                                    <i class="bi bi-filter text-muted"></i> Filtros
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow">
+                                    <li><h6 class="dropdown-header small">Filtrar por</h6></li>
+                                    <li><a class="dropdown-item small" href="#">2025</a></li>
+                                    <li><a class="dropdown-item small" href="#">2024</a></li>
+                                    <li><a class="dropdown-item small" href="#">2023</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item small" href="#">Todos los años</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="chart-container">
+                            <div id="apexChart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm mb-4 hover-scale">
+                    <div class="card-header bg-white border-0">
+                        <h6 class="m-0 fw-bold text-dark">
+                            <i class="bi bi-calendar2-week me-2 text-primary"></i>Próximas Reservaciones
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item success border-0 py-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Casa LIZ</h6>
+                                        <small class="text-muted">Luis Adolfo Castellanos Manjarrez</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-success bg-opacity-10 text-success small">Confirmada</span>
+                                        <div class="text-muted small mt-1"><i class="bi bi-calendar4-event me-1"></i>Jueves, 17/04/25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item success border-0 py-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Casa LIZ</h6>
+                                        <small class="text-muted">Petra Ernestina Tabira Porcayo</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-success bg-opacity-10 text-success small">Confirmada</span>
+                                        <div class="text-muted small mt-1"><i class="bi bi-calendar4-event me-1"></i>Lunes, 21/04/25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item secondary border-0 py-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Casa LIZ</h6>
+                                        <small class="text-muted">Edgar Ivan Cruz Duran</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary small">Pendiente</span>
+                                        <div class="text-muted small mt-1"><i class="bi bi-calendar4-event me-1"></i>Viernes, 25/04/25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item secondary border-0 py-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Casa Verde</h6>
+                                        <small class="text-muted">Rafael Fuentes Aburto</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary small">Pendiente</span>
+                                        <div class="text-muted small mt-1"><i class="bi bi-calendar4-event me-1"></i>Viernes, 25/04/25</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabla de reservaciones -->
         <div class="row">
             <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                        <h6 class="m-0 fw-bold">
-                            <i class="bi bi-table me-2"></i>Reservaciones
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 fw-bold text-dark">
+                            <i class="bi bi-table me-2 text-primary"></i>Reservaciones
                         </h6>
                         <div class="d-flex align-items-center">
                             <div class="me-3 d-none d-md-block">
-                                <select class="form-select form-select-sm" id="items-per-page">
+                                <select class="form-select form-select-sm border-0 shadow-sm" id="items-per-page">
                                     <option value="5" selected>5 por página</option>
                                     <option value="10">10 por página</option>
                                     <option value="25">25 por página</option>
@@ -766,46 +911,46 @@
                                 </select>
                             </div>
                             <button class="btn btn-sm btn-primary me-2">
-                                <i class="bi bi-plus-circle me-1"></i> Nueva reservación
+                                <i class="bi bi-plus-circle me-1"></i> Nueva
                             </button>
                             <div class="dropdown d-inline">
-                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
+                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
                                     <i class="bi bi-funnel me-1"></i> Filtrar
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><h6 class="dropdown-header">Estado</h6></li>
-                                    <li><a class="dropdown-item" href="#">Todos</a></li>
-                                    <li><a class="dropdown-item" href="#">Activos</a></li>
-                                    <li><a class="dropdown-item" href="#">Completados</a></li>
-                                    <li><a class="dropdown-item" href="#">Pendientes</a></li>
+                                <ul class="dropdown-menu dropdown-menu-end shadow">
+                                    <li><h6 class="dropdown-header small">Estado</h6></li>
+                                    <li><a class="dropdown-item small" href="#">Todos</a></li>
+                                    <li><a class="dropdown-item small" href="#">Activos</a></li>
+                                    <li><a class="dropdown-item small" href="#">Completados</a></li>
+                                    <li><a class="dropdown-item small" href="#">Pendientes</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-0">
                         <!-- Versión Escritorio (se muestra en md y superior) -->
                         <div class="d-none d-md-block">
                             <div class="table-responsive">
-                                <table class="table table-hover table-bordered mb-0">
-                                    <thead>
+                                <table class="table table-hover mb-0">
+                                    <thead class="bg-light">
                                         <tr>
-                                            <th>Estado</th>
-                                            <th>Casa</th>
-                                            <th>Entrada</th>
-                                            <th>Nombre</th>
-                                            <th>Teléfono</th>
-                                            <th>Anticipo</th>
-                                            <th>Total</th>
-                                            <th>Acciones</th>
+                                            <th class="text-muted small fw-normal">Estado</th>
+                                            <th class="text-muted small fw-normal">Casa</th>
+                                            <th class="text-muted small fw-normal">Entrada</th>
+                                            <th class="text-muted small fw-normal">Nombre</th>
+                                            <th class="text-muted small fw-normal">Teléfono</th>
+                                            <th class="text-muted small fw-normal">Anticipo</th>
+                                            <th class="text-muted small fw-normal">Total</th>
+                                            <th class="text-muted small fw-normal">Acciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="desktop-table-body">
+                                    <tbody id="desktop-table-body" class="border-top-0">
                                         <!-- Los datos dinámicos se insertarán aquí -->
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div class="text-muted" id="desktop-pagination-info">Mostrando 1 a 5 de 50 registros</div>
+                            <div class="d-flex justify-content-between align-items-center p-3 bg-light">
+                                <div class="text-muted small" id="desktop-pagination-info">Mostrando 1 a 5 de 50 registros</div>
                                 <nav>
                                     <ul class="pagination pagination-sm mb-0" id="desktop-pagination">
                                         <!-- Paginación dinámica -->
@@ -915,72 +1060,80 @@
         <div class="container-fluid mt-4">
             <div class="row mb-4 g-4">
                 <div class="col-12">
-                    <div class="card border-0 shadow h-100 py-2 gradient-primary text-white hover-scale">
+                    <div class="card border-0 h-100 py-2 bg-white shadow-sm hover-scale border-start border-primary border-4">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col me-2">
-                                    <div class="text-xs fw-bold text-uppercase mb-1 opacity-75">Reservaciones</div>
-                                    <div class="h2 mb-0 fw-bold">20</div>
-                                    <div class="mt-2 small">
-                                        <span class="opacity-75"> del mes actual</span>
+                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Reservaciones</div>
+                                    <div class="h2 mb-0 fw-bold text-dark">20</div>
+                                    <div class="mt-2 small text-muted">
+                                        <span>del mes actual</span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="bi bi-calendar-check card-icon"></i>
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-calendar-check text-primary card-icon"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-12">
-                    <div class="card border-0 shadow h-100 py-2 gradient-success text-white hover-scale">
+                    <div class="card border-0 h-100 py-2 bg-white shadow-sm hover-scale border-start border-success border-4">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col me-2">
-                                    <div class="text-xs fw-bold text-uppercase mb-1 opacity-75">Casas disponibles</div>
-                                    <div class="h2 mb-0 fw-bold">50</div>
-                                    <div class="mt-2 small">
-                                        <span class="opacity-75">  el siguiente fin</span>
+                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Casas disponibles</div>
+                                    <div class="h2 mb-0 fw-bold text-dark">50</div>
+                                    <div class="mt-2 small text-muted">
+                                        <span>el siguiente fin</span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="bi bi-house-check card-icon"></i>
+                                    <div class="bg-success bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-house-check text-success card-icon"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-12">
-                    <div class="card border-0 shadow h-100 py-2 gradient-warning text-white hover-scale">
+                    <div class="card border-0 h-100 py-2 bg-white shadow-sm hover-scale border-start border-warning border-4">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col me-2">
-                                    <div class="text-xs fw-bold text-uppercase mb-1 opacity-75">Ingreso</div>
-                                    <div class="h2 mb-0 fw-bold">$35,000</div>
-                                    <div class="mt-2 small">
-                                        <span class="opacity-75"> semanal</span>
+                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">Ingreso</div>
+                                    <div class="h2 mb-0 fw-bold text-dark">$35,000</div>
+                                    <div class="mt-2 small text-muted">
+                                        <span>semanal</span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="bi bi-currency-dollar card-icon"></i>
+                                    <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-currency-dollar text-warning card-icon"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-12">
-                    <div class="card border-0 shadow h-100 py-2 gradient-danger text-white hover-scale">
+                    <div class="card border-0 h-100 py-2 bg-white shadow-sm hover-scale border-start border-danger border-4">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col me-2">
-                                    <div class="text-xs fw-bold text-uppercase mb-1 opacity-75">RESERVACIONES</div>
-                                    <div class="h2 mb-0 fw-bold">45</div>
-                                    <div class="mt-2 small">
-                                        <span class="opacity-75"> totales cerradas</span>
+                                    <div class="text-xs fw-bold text-uppercase mb-1 text-muted">RESERVACIONES</div>
+                                    <div class="h2 mb-0 fw-bold text-dark">45</div>
+                                    <div class="mt-2 small text-muted">
+                                        <span>totales cerradas</span>
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="bi bi-calendar-minus card-icon"></i>
+                                    <div class="bg-danger bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-calendar-minus text-danger card-icon"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1033,6 +1186,16 @@
                                         <label class="form-check-label" for="notificacionesSwitch">Recibir notificaciones</label>
                                     </div>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Configuración de Casas</label>
+                                    <button type="btn btn-primary" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaCasaModal">
+                                        <i class="bi bi-house-add-fill me-1"></i> Nueva casa
+                                    </button>
+                                    <button type="btn btn-primary" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#iraCasaModal">
+                                        <i class="bi bi-house-up-fill me-1"></i> Ir a casa
+                                    </button>
+                                </div>
+                                
                                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
                             </form>
                         </div>
@@ -1041,6 +1204,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Plantilla para filas en versión escritorio -->
     <template id="desktop-row-template">
@@ -1108,11 +1272,638 @@
         </div>
     </template>
 
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="nuevaCasaModal" tabindex="-1" aria-labelledby="nuevaCasaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header border-0 bg-light">
+                    <h5 class="modal-title fs-5" id="nuevaCasaModalLabel">🏠 Agregar Nueva Casa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <form id="formNuevaCasa" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body p-0">
+                        <div class="row g-0">
+                            <!-- Columna Izquierda -->
+                            <div class="col-md-6 p-4 border-end">
+                                <div class="mb-3">
+                                    <label for="casa_nombre" class="form-label small text-muted">NOMBRE <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm" id="casa_nombre" name="casa_nombre" required>
+                                    <div class="invalid-feedback small">Requerido</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="casa_propietario" class="form-label small text-muted">PROPIETARIO <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm" id="casa_propietario" name="casa_propietario" required>
+                                    <div class="invalid-feedback small">Requerido</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="casa_direccion" class="form-label small text-muted">DIRECCIÓN <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm" id="casa_direccion" name="casa_direccion" required>
+                                    <div class="invalid-feedback small">Requerido</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="casa_municipio" class="form-label small text-muted">MUNICIPIO <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm" id="casa_municipio" name="casa_municipio" required>
+                                    <div class="invalid-feedback small">Requerido</div>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha -->
+                            <div class="col-md-6 p-4">
+                                <div class="mb-3">
+                                    <label for="casa_logo" class="form-label small text-muted">LOGO <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control form-control-sm" id="casa_logo" name="casa_logo" accept="image/*" required>
+                                    <small class="text-muted d-block mt-1">JPG o PNG (Máx. 2MB)</small>
+                                    <div class="invalid-feedback small">Requerido</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="casa_precioxnoche" class="form-label small text-muted">PRECIO/NOCHE <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="0.01" min="0" class="form-control" id="casa_precioxnoche" name="casa_precioxnoche" required>
+                                    </div>
+                                    <div class="invalid-feedback small">Requerido</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="casa_telefono" class="form-label small text-muted">TELÉFONO <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control form-control-sm" id="casa_telefono" name="casa_telefono" required>
+                                    <div class="invalid-feedback small">Requerido</div>
+                                </div>
+                                
+                                <div class="form-check form-switch ps-0 mt-3">
+                                    <label class="form-check-label small text-muted" for="casa_activo">ACTIVO</label>
+                                    <input class="form-check-input float-end" type="checkbox" role="switch" id="casa_activo" name="casa_activo" checked>
+                                </div>
+                                
+                                <!-- Vista previa del logo -->
+                                <div class="mt-4 pt-3 border-top" id="logoPreviewContainer" style="display: none;">
+                                    <label class="small text-muted">VISTA PREVIA</label>
+                                    <img id="logoPreview" src="#" alt="Vista previa" class="img-fluid rounded d-block mx-auto mt-2" style="max-height: 100px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="px-4 pb-4">
+                            <label for="casa_descripcion" class="form-label small text-muted">DESCRIPCIÓN <span class="text-danger">*</span></label>
+                            <textarea class="form-control form-control-sm summernote" id="casa_descripcion" name="casa_descripcion" rows="3" required></textarea>
+                            <div class="invalid-feedback small">Requerido</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="bi bi-save me-1"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- ApexCharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+    <!-- Modal Ir a Casa -->
+    <div class="modal fade" id="iraCasaModal" tabindex="-1" aria-labelledby="iraCasaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header border-0 bg-light">
+                    <h5 class="modal-title fs-5">🏠 Administrar Casa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Selector -->
+                    <div class="px-4 pb-3 border-bottom">
+                        <label for="selectCasas" class="form-label small text-muted mb-1">SELECCIONE UNA CASA</label>
+                        <select class="form-select form-select-sm" id="selectCasas">
+                            <option disabled selected>Cargando casas...</option>
+                        </select>
+                    </div>
+
+                    <!-- Formulario de Edición -->
+                    <form id="formEditarCasa" enctype="multipart/form-data" style="display:none;">
+                        <input type="hidden" id="casa_id" name="casa_id">
+                        
+                        <div class="p-4">
+                            <div class="row g-3">
+                                <!-- Primera columna -->
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label small text-muted">Nombre</label>
+                                    <input type="text" class="form-control form-control-sm" id="casa_nombre_edit" name="casa_nombre">
+                                    
+                                    <label class="form-label small text-muted mt-3">Dirección</label>
+                                    <input type="text" class="form-control form-control-sm" id="casa_direccion_edit" name="casa_direccion">
+                                    
+                                    <label class="form-label small text-muted mt-3">Precio por noche</label>
+                                    <input type="number" class="form-control form-control-sm" id="casa_precioxnoche_edit" name="casa_precioxnoche">
+                                </div>
+                                
+                                <!-- Segunda columna -->
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label small text-muted">Propietario</label>
+                                    <input type="text" class="form-control form-control-sm" id="casa_propietario_edit" name="casa_propietario">
+                                    
+                                    <label class="form-label small text-muted mt-3">Municipio</label>
+                                    <input type="text" class="form-control form-control-sm" id="casa_municipio_edit" name="casa_municipio">
+                                    
+                                    <label class="form-label small text-muted mt-3">Teléfono</label>
+                                    <input type="tel" class="form-control form-control-sm" id="casa_telefono_edit" name="casa_telefono">
+                                </div>
+                                
+                                <!-- Campos de ancho completo -->
+                                <div class="col-12">
+                                    <label class="form-label small text-muted">Descripción</label>
+                                    <textarea class="form-control form-control-sm" id="casa_descripcion_edit" name="casa_descripcion" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label small text-muted">Logo</label>
+                                    <img id="logoCasaEdit" src="#" alt="Logo de la casa" class="img-fluid rounded mb-2 d-block mx-auto" style="max-height:120px; display:none;">
+                                    <input type="file" class="form-control form-control-sm" id="casa_logo_edit" name="casa_logo" accept="image/*" style="display:none;">
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="form-check form-switch ps-0">
+                                        <label class="form-check-label small text-muted" for="casa_activo_edit">Activo</label>
+                                        <input class="form-check-input float-end" type="checkbox" role="switch" id="casa_activo_edit" name="casa_activo">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2 mt-4 pt-2 border-top">
+                                <button type="button" id="editarCasaBtn" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-pencil-square me-1"></i> Editar
+                                </button>
+                                <button type="button" id="cancelarEdicionBtn" class="btn btn-sm btn-outline-danger" style="display:none;">
+                                    Cancelar
+                                </button>
+                                <button type="submit" id="guardarCambiosBtn" class="btn btn-sm btn-primary" style="display:none;">
+                                    <i class="bi bi-save me-1"></i> Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Dentro del modal #iraCasaModal, después del formulario principal -->
+                    <div class="p-4 border-top">
+                        <h6 class="fw-bold mb-3">
+                            <i class="bi bi-images me-2"></i> Galería de Imágenes
+                        </h6>
+                        
+                        <!-- Área para subir nuevas imágenes -->
+                        <div class="mb-4">
+                            <label class="form-label small text-muted">AGREGAR NUEVAS IMÁGENES</label>
+                            <div class="dropzone border rounded p-3 text-center" id="imageDropzone">
+                                <input type="file" id="imageUpload" name="images[]" multiple accept="image/*" style="display:none;">
+                                <div class="dz-message">
+                                    <i class="bi bi-cloud-arrow-up fs-1 text-muted"></i>
+                                    <p class="mb-0">Arrastra imágenes aquí o haz clic para seleccionar</p>
+                                    <small class="text-muted">Formatos: JPG, PNG (Máx. 5MB cada una)</small>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback small" id="imageUploadError"></div>
+                        </div>
+                        
+                        <!-- Cuadrícula de imágenes existentes -->
+                        <div class="row g-2" id="imageGallery">
+                            <!-- Las imágenes existentes se cargarán aquí -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+$(document).ready(function () {
+    // Inicializar Summernote para los campos de descripción
+    $('.summernote').summernote({
+        height: 200,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+        ],
+        disable: true // Deshabilitar inicialmente
+    });
+
+    // Mostrar modal de "Ir a Casa"
+    $('#iraCasaModal').on('show.bs.modal', function () {
+        cargarCasas();
+        resetModalCasa();
+    });
+
+    // Selección de casa
+    $('#selectCasas').change(function () {
+        const casaId = $(this).val();
+        if (casaId) {
+            cargarInfoCasa(casaId);
+        }
+    });
+
+    // Botón Editar
+    $('#editarCasaBtn').click(function () {
+        activarEdicion(true);
+    });
+
+    // Botón Cancelar Edición
+    $('#cancelarEdicionBtn').click(function () {
+        activarEdicion(false);
+        // Recargar la información original al cancelar
+        const casaId = $('#casa_id').val();
+        cargarInfoCasa(casaId);
+    });
+
+    // Formulario para editar la casa
+    $('#formEditarCasa').submit(function (e) {
+        e.preventDefault();
+        const casaId = $('#casa_id').val();
+        const formData = new FormData(this);
+                
+        formData.set('casa_activo', $('#casa_activo_edit').is(':checked') ? '1' : '0');
+
+        $.ajax({
+            url: `{{ route('actualizarCasa') }}`,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            beforeSend: function () {
+                Swal.fire({
+                    title: 'Guardando cambios...',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+            },
+            success: function () {
+                Swal.fire('¡Guardado!', 'Los cambios se guardaron correctamente.', 'success');
+                activarEdicion(false);
+                cargarInfoCasa(casaId); // Recargar info actualizada
+            },
+            error: function (xhr) {
+                Swal.close();
+                Swal.fire('Error', xhr.responseJSON?.message || 'Ocurrió un error.', 'error');
+            }
+        });
+    });
+
+    // Funciones
+
+    function cargarCasas() {
+        $.get("{{ route('buscarCasas') }}", function (response) {
+            if (response.casas?.length) {
+                let options = '<option value="" disabled selected>Seleccione una casa</option>';
+                response.casas.forEach(casa => {
+                    options += `<option value="${casa.casa_id}">${casa.casa_nombre} - ${casa.casa_municipio}</option>`;
+                });
+                $('#selectCasas').html(options);
+            } else {
+                $('#selectCasas').html('<option disabled>No hay casas registradas</option>');
+            }
+        }).fail(() => {
+            $('#selectCasas').html('<option disabled>Error al cargar casas</option>');
+        });
+    }
+
+    function cargarInfoCasa(casaId) {
+        $.ajax({
+            url: `{{ route('mostrarCasa') }}`,
+            method: 'POST',
+            data: {
+                casa_id: casaId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                const c = res.casa;
+                $('#formEditarCasa input, #formEditarCasa textarea').prop('readonly', true).addClass('bg-light');
+                $('#casa_id').val(c.casa_id);
+                $('#casa_nombre_edit').val(c.casa_nombre);
+                $('#casa_propietario_edit').val(c.casa_propietario);
+                $('#casa_direccion_edit').val(c.casa_direccion);
+                $('#casa_municipio_edit').val(c.casa_municipio);
+                $('#casa_precioxnoche_edit').val(c.casa_precioxnoche);
+                $('#casa_telefono_edit').val(c.casa_telefono);
+                $('#casa_descripcion_edit').summernote('code', c.casa_descripcion || '');
+                $('#casa_activo_edit').prop('checked', c.casa_activo);
+                
+                // Mostrar u ocultar imagen según exista
+                if (c.casa_logo) {
+                    $('#logoCasaEdit').attr('src', c.casa_logo).show();
+                } else {
+                    $('#logoCasaEdit').hide();
+                }
+                
+                // Ocultar input de imagen en modo visualización
+                $('#casa_logo_edit').hide();
+                
+                $('#formEditarCasa').show();
+                $('#editarCasaBtn, #irACasaBtn').show();
+                $('#guardarCambiosBtn, #cancelarEdicionBtn').hide();
+                
+                // Deshabilitar Summernote inicialmente
+                $('#casa_descripcion_edit').summernote('disable');
+                
+                cargarImagenesCasa(casaId);
+            },
+            error: function() {
+                Swal.fire('Error', 'No se pudo cargar la información.', 'error');
+            }
+        });
+    }
+
+    function activarEdicion(activo) {
+        $('#formEditarCasa input, #formEditarCasa textarea').prop('readonly', !activo).toggleClass('bg-light', !activo);
+        $('#casa_descripcion_edit').summernote(activo ? 'enable' : 'disable');
+        $('#guardarCambiosBtn, #cancelarEdicionBtn').toggle(activo);
+        $('#editarCasaBtn, #irACasaBtn').toggle(!activo);
+        
+        // Mostrar u ocultar input de imagen según modo edición
+        if (activo) {
+            $('#casa_logo_edit').show();
+            $('#logoCasaEdit').hide();
+        } else {
+            $('#casa_logo_edit').hide();
+            if ($('#casa_logo_edit').val() === '') {
+                $('#logoCasaEdit').show();
+            }
+        }
+    }
+
+    function resetModalCasa() {
+        $('#selectCasas').val('');
+        $('#formEditarCasa').hide();
+    }
+
+    function cargarImagenesCasa(casaId) {
+        $.ajax({
+            url: `{{ route('obtenerImagenes') }}`,
+            method: 'POST',
+            data: {
+                casa_id: casaId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                const gallery = $('#imageGallery');
+                gallery.empty();
+                
+                if (response.imagenes && response.imagenes.length > 0) {
+                    response.imagenes.forEach(imagen => {
+                        gallery.append(crearTarjetaImagen(imagen));
+                    });
+                } else {
+                    gallery.html('<div class="col-12 text-center py-4 text-muted"><i class="bi bi-images fs-1"></i><p>No hay imágenes para esta casa</p></div>');
+                }
+            },
+            error: function() {
+                $('#imageGallery').html('<div class="col-12 text-center py-4 text-danger">Error al cargar imágenes</div>');
+            }
+        });
+    }
+
+    function crearTarjetaImagen(imagen) {
+        return `
+            <div class="col-6 col-md-4 col-lg-3" data-img-id="${imagen.img_id}">
+                <div class="image-card">
+                    <img src="${imagen.img_url}" alt="Imagen de la casa" class="img-fluid">
+                    <div class="image-actions">
+                        <button class="btn btn-sm btn-danger btn-eliminar-imagen" data-img-id="${imagen.img_id}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Configurar el dropzone para subir imágenes
+    $(document).ready(function() {
+        const dropzone = $('#imageDropzone');
+        const fileInput = $('#imageUpload');
+        
+        dropzone.on('click', function() {
+            fileInput.click();
+        });
+        
+        fileInput.on('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                subirImagenes(this.files);
+            }
+        });
+        
+        dropzone.on('dragover', function(e) {
+            e.preventDefault();
+            dropzone.addClass('border-primary');
+            dropzone.css('background-color', 'rgba(106, 17, 203, 0.05)');
+        });
+        
+        dropzone.on('dragleave', function(e) {
+            e.preventDefault();
+            dropzone.removeClass('border-primary');
+            dropzone.css('background-color', 'rgba(0,0,0,0.02)');
+        });
+        
+        dropzone.on('drop', function(e) {
+            e.preventDefault();
+            dropzone.removeClass('border-primary');
+            dropzone.css('background-color', 'rgba(0,0,0,0.02)');
+            
+            if (e.originalEvent.dataTransfer.files.length > 0) {
+                subirImagenes(e.originalEvent.dataTransfer.files);
+            }
+        });
+        
+        // Delegación de eventos para eliminar imágenes
+        $(document).on('click', '.btn-eliminar-imagen', function() {
+            const imgId = $(this).data('img-id');
+            eliminarImagen(imgId);
+        });
+    });
+
+    function subirImagenes(files) {
+        const casaId = $('#casa_id').val();
+        if (!casaId) {
+            Swal.fire('Error', 'No se ha seleccionado una casa', 'error');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('casa_id', casaId);
+        formData.append('_token', '{{ csrf_token() }}');
+        
+        // Validar cada archivo antes de agregarlo
+        let hasErrors = false;
+        Array.from(files).forEach((file, index) => {
+            if (file.size > 5 * 1024 * 1024) {
+                $('#imageUploadError').text(`El archivo ${file.name} es demasiado grande (Máx. 5MB)`).show();
+                hasErrors = true;
+                return;
+            }
+            
+            if (!file.type.match('image.*')) {
+                $('#imageUploadError').text(`El archivo ${file.name} no es una imagen válida`).show();
+                hasErrors = true;
+                return;
+            }
+            
+            formData.append(`images[${index}]`, file);
+        });
+        
+        if (hasErrors) return;
+        
+        $('#imageUploadError').hide();
+        
+        $.ajax({
+            url: '{{ route("subirImagenes") }}',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                // Mostrar indicador de carga
+                $('#imageDropzone').html('<div class="text-center py-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p class="mt-2 mb-0">Subiendo imágenes...</p></div>');
+            },
+            success: function(response) {
+                // Recargar la galería
+                cargarImagenesCasa(casaId);
+                
+                // Restaurar el dropzone
+                $('#imageDropzone').html(`
+                    <input type="file" id="imageUpload" name="images[]" multiple accept="image/*" style="display:none;">
+                    <div class="dz-message">
+                        <i class="bi bi-cloud-arrow-up fs-1 text-muted"></i>
+                        <p class="mb-0">Arrastra imágenes aquí o haz clic para seleccionar</p>
+                        <small class="text-muted">Formatos: JPG, PNG (Máx. 5MB cada una)</small>
+                    </div>
+                `);
+                
+                Swal.fire('Éxito', 'Imágenes subidas correctamente', 'success');
+            },
+            error: function(xhr) {
+                Swal.fire('Error', xhr.responseJSON?.message || 'Error al subir imágenes', 'error');
+                
+                // Restaurar el dropzone
+                $('#imageDropzone').html(`
+                    <input type="file" id="imageUpload" name="images[]" multiple accept="image/*" style="display:none;">
+                    <div class="dz-message">
+                        <i class="bi bi-cloud-arrow-up fs-1 text-muted"></i>
+                        <p class="mb-0">Arrastra imágenes aquí o haz clic para seleccionar</p>
+                        <small class="text-muted">Formatos: JPG, PNG (Máx. 5MB cada una)</small>
+                    </div>
+                `);
+            }
+        });
+    }
+
+    function eliminarImagen(imgId) {
+        Swal.fire({
+            title: '¿Eliminar imagen?',
+            text: "Esta acción no se puede deshacer",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '{{ route("eliminarImagen") }}',
+                    type: 'POST',
+                    data: {
+                        img_id: imgId,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    beforeSend: function() {
+                        $(`[data-img-id="${imgId}"]`).css('opacity', '0.5');
+                    },
+                    success: function(response) {
+                        $(`[data-img-id="${imgId}"]`).remove();
+                        Swal.fire('Eliminada', 'La imagen ha sido eliminada', 'success');
+                    },
+                    error: function(xhr) {
+                        $(`[data-img-id="${imgId}"]`).css('opacity', '1');
+                        Swal.fire('Error', xhr.responseJSON?.message || 'Error al eliminar la imagen', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    const dropzone = $('#imageDropzone');
+    const fileInput = $('<input type="file" id="imageUpload" multiple accept="image/*" style="display:none">');
+    $('body').append(fileInput);
     
+    // Elimina cualquier input file duplicado
+    $('#imageUpload').not(':last').remove();
+    
+    dropzone.on('click', function(e) {
+        if (!$(e.target).is('input')) {
+            fileInput.trigger('click');
+        }
+    });
+    
+    fileInput.on('change', function(e) {
+        if (this.files && this.files.length > 0) {
+            const files = Array.from(this.files);
+            subirImagenes(files);
+            
+            // Recrear el input para evitar problemas
+            fileInput.remove();
+            fileInput = $('<input type="file" id="imageUpload" multiple accept="image/*" style="display:none">');
+            $('body').append(fileInput);
+            setupFileInputEvents();
+        }
+    });
+    
+    function setupFileInputEvents() {
+        fileInput.on('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                const files = Array.from(this.files);
+                subirImagenes(files);
+                
+                fileInput.remove();
+                fileInput = $('<input type="file" id="imageUpload" multiple accept="image/*" style="display:none">');
+                $('body').append(fileInput);
+                setupFileInputEvents();
+            }
+        });
+    }
+
+    
+});
+    
+    
+</script>
+
     <script>
         // Gestión del tema oscuro/claro
         const themeManager = {
@@ -1500,5 +2291,216 @@
             }
         });
     </script>
+
+    <script>
+      $(document).ready(function() {
+            // Inicializar Summernote con validación mejorada
+            $('.summernote').summernote({
+                height: 200,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                callbacks: {
+                    onChange: function() {
+                        validateSummernote();
+                    },
+                    onInit: function() {
+                        // Validar inicialmente
+                        validateSummernote();
+                    }
+                }
+            });
+
+            // Función mejorada para validar Summernote
+            function validateSummernote() {
+                const content = $('#casa_descripcion').summernote('code');
+                const isEmpty = !content || 
+                            content.trim() === '' || 
+                            content === '<p><br></p>' || 
+                            content === '<p></p>' ||
+                            content === '<p>&nbsp;</p>';
+                
+                if (isEmpty) {
+                    $('#casa_descripcion').addClass('is-invalid');
+                    $('.note-editor').addClass('border-danger');
+                    $('.note-editor').removeClass('border-success');
+                    return false;
+                } else {
+                    $('#casa_descripcion').removeClass('is-invalid');
+                    $('.note-editor').removeClass('border-danger');
+                    $('.note-editor').addClass('border-success');
+                    return true;
+                }
+            }
+
+            // Vista previa de la imagen
+            $('#casa_logo').change(function(e) {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    
+                    if (file.size > 2 * 1024 * 1024) {
+                        $(this).addClass('is-invalid');
+                        $('#logoPreviewContainer').hide();
+                        Swal.fire('Error', 'El archivo es demasiado grande (Máx. 2MB)', 'error');
+                        return;
+                    }
+                    
+                    if (!file.type.match('image.*')) {
+                        $(this).addClass('is-invalid');
+                        $('#logoPreviewContainer').hide();
+                        Swal.fire('Error', 'Solo se permiten imágenes (JPG, PNG)', 'error');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#logoPreview').attr('src', e.target.result);
+                        $('#logoPreviewContainer').show();
+                        $(this).removeClass('is-invalid');
+                    }.bind(this);
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Envío del formulario con AJAX
+            $('#formNuevaCasa').submit(function(e) {
+                e.preventDefault();
+                
+                // Validar Summernote primero
+                if (!validateSummernote()) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'La descripción es obligatoria',
+                        icon: 'error',
+                        confirmButtonText: 'Entendido'
+                    });
+                    $('html, body').animate({
+                        scrollTop: $('#casa_descripcion').offset().top - 100
+                    }, 500);
+                    return;
+                }
+                
+                // Validar otros campos
+                let isValid = true;
+                $(this).find('[required]').each(function() {
+                    if (!$(this).val()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                        
+                        // Scroll al primer error
+                        if (isValid === false) {
+                            $('html, body').animate({
+                                scrollTop: $(this).offset().top - 100
+                            }, 500);
+                            isValid = null; // Solo hacemos scroll una vez
+                        }
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                if (!isValid) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Por favor complete todos los campos obligatorios',
+                        icon: 'error',
+                        confirmButtonText: 'Entendido'
+                    });
+                    return;
+                }
+                
+                // Obtener el contenido HTML de Summernote
+                const descripcionHtml = $('#casa_descripcion').summernote('code');
+                
+                // Crear objeto FormData
+                const formData = new FormData(this); // Usamos el formulario directamente
+                
+                // Actualizar la descripción con el contenido de Summernote
+                formData.set('casa_descripcion', descripcionHtml);
+                
+                // Agregar el campo casa_activo
+                formData.set('casa_activo', $('#casa_activo').is(':checked') ? '1' : '0');
+                
+                // Enviar por AJAX con CSRF token
+                $.ajax({
+                    url: $(this).attr('action') || "{{ route('nuevaCasa') }}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Procesando',
+                            html: 'Guardando información de la casa...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: '¡Éxito!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            $('#nuevaCasaModal').modal('hide');
+                            
+                            // Recargar la página o actualizar la tabla
+                            if (result.isConfirmed) {
+                                // Redirigir a la vista de detalles
+                                window.location.href = response.redirect_url;
+                            } else {
+                                // Recargar la página si no quiere ver detalles
+                                window.location.reload();
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.close();
+                        let errorMessage = 'Error al guardar la casa';
+                        
+                        if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors;
+                            errorMessage = '';
+                            $.each(errors, function(key, value) {
+                                errorMessage += value + '<br>';
+                            });
+                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        
+                        Swal.fire({
+                            title: 'Error',
+                            html: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'Entendido'
+                        });
+                    }
+                });
+            });
+
+            // Limpiar el modal al cerrar
+            $('#nuevaCasaModal').on('hidden.bs.modal', function() {
+                $(this).find('form')[0].reset();
+                $('.summernote').summernote('reset');
+                $('#logoPreviewContainer').hide();
+                $('.is-invalid').removeClass('is-invalid');
+                $('.note-editor').removeClass('border-danger border-success');
+            });
+        });
+    </script>
+
 </body>
 </html>
