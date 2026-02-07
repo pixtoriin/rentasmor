@@ -864,7 +864,7 @@
     <div class="hero">
         <div class="hero__bg">
             <picture>
-                <img src="{{ asset('imagenes/atardecer02.jpg') }}">
+                <img src="{{ asset('imagenes/atardecer_ia_02.png') }}">
             </picture>
         </div>
 

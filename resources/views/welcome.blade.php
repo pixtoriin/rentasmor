@@ -725,14 +725,14 @@
     <div class="hero">
         <div class="hero__bg">
             <picture>
-                <img src="{{ asset('imagenes/atardecer02.jpg') }}" alt="Atardecer en Morelos">
+                <img src="{{ asset('imagenes/atardecer_ia_01.png') }}" alt="Atardecer en Morelos">
             </picture>
         </div>
 
         <div class="hero__cnt">
             <img class="custom-img-hero" src="{{ asset('imagenes/LogoRD.svg') }}" alt="Logo Rentas Directas">
             <h1 class="custom-rentasDirectas">RENTAS DIRECTAS</h1>
-            <p class="custom-text">Tu comodidad es nuestra prioridad</p>
+            <p class="custom-text">Tu comodidad es nuestra prioridad....</p>
             <div class="hero-nav__button">
                 <a href="#main">Ver más<i class="bi bi-chevron-double-down"></i></a>
             </div>
@@ -850,7 +850,7 @@
                             <div class="footer">
                                 <div class="event-info">
                                     <div class="icono">
-                                        <i class="bi bi-house-fill"></i> Casa Liz
+                                        <i class="bi bi-house-fill"></i> Casa LIZ
                                     </div>
                                 </div>
                                 <div class="icono">
